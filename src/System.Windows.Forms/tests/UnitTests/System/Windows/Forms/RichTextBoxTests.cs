@@ -10335,42 +10335,42 @@ namespace System.Windows.Forms.Tests
             Assert.Contains("RICHEDIT50W", GetClassName(control.Handle), StringComparison.InvariantCultureIgnoreCase);
         }
 
-        //[WinFormsFact]
-        //public void RichTextBox_CheckRichEditWithVersionCanCreateOldVersions()
-        //{
-        //    using var control1 = new RichEditWithVersion("riched32.dll", "RichEdit");
-        //    control1.CreateControl();
-        //    Assert.Contains(".RichEdit.", GetClassName(control1.Handle), StringComparison.InvariantCultureIgnoreCase);
+        [WinFormsFact]
+        public void RichTextBox_CheckRichEditWithVersionCanCreateOldVersions()
+        {
+            using (var riched32 = new RichEditWithVersion("riched32.dll", "RichEdit"))
+            {
+                riched32.CreateControl();
+                Assert.Contains(".RichEdit.", GetClassName(riched32.Handle), StringComparison.InvariantCultureIgnoreCase);
+            }
 
-        //    using var control2 = new RichEditWithVersion("riched20.dll", "RichEdit20W");
-        //    control2.CreateControl();
-        //    Assert.Contains(".RichEdit20W.", GetClassName(control2.Handle), StringComparison.InvariantCultureIgnoreCase);
-        //}
+            //using (var riched20 = new RichEditWithVersion("riched20.dll", "RichEdit20W"))
+            //{
+            //    riched20.CreateControl();
+            //    Assert.Contains(".RichEdit20W.", GetClassName(riched20.Handle), StringComparison.InvariantCultureIgnoreCase);
+            //}
 
-        //[WinFormsFact]
-        //public void RichTextBox_HiddenTextOnlyAffectsRtf()
-        //{
-        //    string rtfString = @"{\rtf1\ansi{" +
-        //        @"The next line\par " +
-        //        @"is {\v ###NOT### }hidden\par in plain text!}}";
+            // ---
 
-        //    using var control1 = new RichTextBox();
-        //    control1.CreateControl();
-        //    control1.Rtf = rtfString;
+            //string rtfString = @"{\rtf1\ansi{" +
+            //    @"The next line\par " +
+            //    @"is {\v ###NOT### }hidden\par in plain text!}}";
 
-        //    using var control2 = new RichEditWithVersion("RichEd20.dll", "RichEdit20W"); // RichEdit 2/3 performed correctly
-        //    control2.CreateControl();
-        //    control2.Rtf = rtfString;
+            //using var richTextBox = new RichTextBox();
+            //richTextBox.CreateControl();
+            //richTextBox.Rtf = rtfString;
 
-        //    Assert.Equal(control2.TextLength, control1.TextLength);
-        //    Assert.Equal(control2.Text, control1.Text);
-        //    Assert.Equal(control1.Text.Length, control1.TextLength);
+            //riched20.Rtf = rtfString;
 
-        //    int startOfIs = control2.Text.IndexOf("is");
-        //    int endOfHidden = control2.Text.IndexOf("hidden") + "hidden".Length;
-        //    control1.Select(startOfIs, endOfHidden - startOfIs);
-        //    Assert.Equal("is ###NOT### hidden", control1.SelectedText);
-        //}
+            //Assert.Equal(riched20.TextLength, richTextBox.TextLength);
+            //Assert.Equal(riched20.Text, richTextBox.Text);
+            //Assert.Equal(richTextBox.Text.Length, richTextBox.TextLength);
+
+            //int startOfIs = riched20.Text.IndexOf("is");
+            //int endOfHidden = riched20.Text.IndexOf("hidden") + "hidden".Length;
+            //richTextBox.Select(startOfIs, endOfHidden - startOfIs);
+            //Assert.Equal("is ###NOT### hidden", richTextBox.SelectedText);
+        }
 
         private class CustomGetParaFormatRichTextBox : RichTextBox
         {
@@ -10511,47 +10511,47 @@ namespace System.Windows.Forms.Tests
             return sb.ToString();
         }
 
-        //private class RichEditWithVersion : RichTextBox
-        //{
-        //    public RichEditWithVersion(string nativeDll, string windowClassName)
-        //    {
-        //        this.nativeDll = nativeDll;
-        //        this.windowClassName = windowClassName;
-        //    }
+        private class RichEditWithVersion : RichTextBox
+        {
+            public RichEditWithVersion(string nativeDll, string windowClassName)
+            {
+                this.nativeDll = nativeDll;
+                this.windowClassName = windowClassName;
+            }
 
-        //    private IntPtr _nativeDllHandle = IntPtr.Zero;
-        //    protected string nativeDll;
-        //    protected string windowClassName;
+            private IntPtr _nativeDllHandle = IntPtr.Zero;
+            protected string nativeDll;
+            protected string windowClassName;
 
-        //    protected override CreateParams CreateParams
-        //    {
-        //        get
-        //        {
-        //            CreateParams cp = base.CreateParams;
+            protected override CreateParams CreateParams
+            {
+                get
+                {
+                    CreateParams cp = base.CreateParams;
 
-        //            if (_nativeDllHandle == IntPtr.Zero &&
-        //                !string.IsNullOrEmpty(nativeDll)) // CreateParams is called in the base class constructor, before nativeDll is assigned.
-        //            {
-        //                _nativeDllHandle = NativeLibrary.Load(nativeDll);
-        //            }
+                    if (_nativeDllHandle == IntPtr.Zero &&
+                        !string.IsNullOrEmpty(nativeDll)) // CreateParams is called in the base class constructor, before nativeDll is assigned.
+                    {
+                        _nativeDllHandle = NativeLibrary.Load(nativeDll);
+                    }
 
-        //            if (!string.IsNullOrEmpty(windowClassName))
-        //            {
-        //                cp.ClassName = windowClassName;
-        //            }
+                    if (!string.IsNullOrEmpty(windowClassName))
+                    {
+                        cp.ClassName = windowClassName;
+                    }
 
-        //            return cp;
-        //        }
-        //    }
+                    return cp;
+                }
+            }
 
-        //    protected override void Dispose(bool disposing)
-        //    {
-        //        base.Dispose(disposing);
-        //        if (_nativeDllHandle != IntPtr.Zero)
-        //        {
-        //            NativeLibrary.Free(_nativeDllHandle);
-        //        }
-        //    }
-        //}
+            protected override void Dispose(bool disposing)
+            {
+                base.Dispose(disposing);
+                if (_nativeDllHandle != IntPtr.Zero)
+                {
+                    NativeLibrary.Free(_nativeDllHandle);
+                }
+            }
+        }
     }
 }
