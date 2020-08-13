@@ -10344,11 +10344,11 @@ namespace System.Windows.Forms.Tests
                 Assert.Contains(".RichEdit.", GetClassName(riched32.Handle), StringComparison.InvariantCultureIgnoreCase);
             }
 
-            //using (var riched20 = new RichEditWithVersion("riched20.dll", "RichEdit20W"))
-            //{
-            //    riched20.CreateControl();
-            //    Assert.Contains(".RichEdit20W.", GetClassName(riched20.Handle), StringComparison.InvariantCultureIgnoreCase);
-            //}
+            using (var riched20 = new RichEditWithVersion("riched20.dll", "RichEdit20W"))
+            {
+                riched20.CreateControl();
+                Assert.Contains(".RichEdit20W.", GetClassName(riched20.Handle), StringComparison.InvariantCultureIgnoreCase);
+            }
 
             // ---
 
