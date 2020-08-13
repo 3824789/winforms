@@ -10326,14 +10326,14 @@ namespace System.Windows.Forms.Tests
             Assert.Equal(0, createdCallCount);
         }
 
-        //[WinFormsFact]
-        //public void RichTextBox_CheckDefaultNativeControlVersions()
-        //{
-        //    using var control = new RichTextBox();
-        //    control.CreateControl();
+        [WinFormsFact]
+        public void RichTextBox_CheckDefaultNativeControlVersions()
+        {
+            using var control = new RichTextBox();
+            control.CreateControl();
 
-        //    Assert.Contains("RICHEDIT50W", GetClassName(control.Handle), StringComparison.InvariantCultureIgnoreCase);
-        //}
+            Assert.Contains("RICHEDIT50W", GetClassName(control.Handle), StringComparison.InvariantCultureIgnoreCase);
+        }
 
         //[WinFormsFact]
         //public void RichTextBox_CheckRichEditWithVersionCanCreateOldVersions()
@@ -10503,13 +10503,13 @@ namespace System.Windows.Forms.Tests
             public new void WndProc(ref Message m) => base.WndProc(ref m);
         }
 
-        //private static string GetClassName(IntPtr hWnd)
-        //{
-        //    const int MaxClassName = 256;
-        //    StringBuilder sb = new StringBuilder(MaxClassName);
-        //    UnsafeNativeMethods.GetClassName(new HandleRef(null, hWnd), sb, MaxClassName);
-        //    return sb.ToString();
-        //}
+        private static string GetClassName(IntPtr hWnd)
+        {
+            const int MaxClassName = 256;
+            StringBuilder sb = new StringBuilder(MaxClassName);
+            UnsafeNativeMethods.GetClassName(new HandleRef(null, hWnd), sb, MaxClassName);
+            return sb.ToString();
+        }
 
         //private class RichEditWithVersion : RichTextBox
         //{
