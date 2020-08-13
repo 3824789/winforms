@@ -10349,27 +10349,33 @@ namespace System.Windows.Forms.Tests
                 riched20.CreateControl();
                 Assert.Contains(".RichEdit20W.", GetClassName(riched20.Handle), StringComparison.InvariantCultureIgnoreCase);
             }
+        }
 
-            // ---
+        [WinFormsFact]
+        public void RichTextBox_HiddenTextOnlyAffectsRtf()
+        {
+            string rtfString = @"{\rtf1\ansi{" +
+                @"The next line\par " +
+                @"is {\v ###NOT### }hidden\par in plain text!}}";
 
-            //string rtfString = @"{\rtf1\ansi{" +
-            //    @"The next line\par " +
-            //    @"is {\v ###NOT### }hidden\par in plain text!}}";
+            using (var riched20 = new RichEditWithVersion("riched20.dll", "RichEdit20W"))
+            {
+                riched20.CreateControl();
+                riched20.Rtf = rtfString;
 
-            //using var richTextBox = new RichTextBox();
-            //richTextBox.CreateControl();
-            //richTextBox.Rtf = rtfString;
+                using var richTextBox = new RichTextBox();
+                richTextBox.CreateControl();
+                richTextBox.Rtf = rtfString;
 
-            //riched20.Rtf = rtfString;
+                Assert.Equal(riched20.TextLength, richTextBox.TextLength);
+                Assert.Equal(riched20.Text, richTextBox.Text);
+                Assert.Equal(richTextBox.Text.Length, richTextBox.TextLength);
 
-            //Assert.Equal(riched20.TextLength, richTextBox.TextLength);
-            //Assert.Equal(riched20.Text, richTextBox.Text);
-            //Assert.Equal(richTextBox.Text.Length, richTextBox.TextLength);
-
-            //int startOfIs = riched20.Text.IndexOf("is");
-            //int endOfHidden = riched20.Text.IndexOf("hidden") + "hidden".Length;
-            //richTextBox.Select(startOfIs, endOfHidden - startOfIs);
-            //Assert.Equal("is ###NOT### hidden", richTextBox.SelectedText);
+                int startOfIs = riched20.Text.IndexOf("is");
+                int endOfHidden = riched20.Text.IndexOf("hidden") + "hidden".Length;
+                richTextBox.Select(startOfIs, endOfHidden - startOfIs);
+                Assert.Equal("is ###NOT### hidden", richTextBox.SelectedText);
+            }
         }
 
         private class CustomGetParaFormatRichTextBox : RichTextBox
