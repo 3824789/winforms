@@ -3138,7 +3138,11 @@ namespace System.Windows.Forms
 
         private unsafe string GetTextEx(GT flags = GT.DEFAULT)
         {
-            Debug.Assert(IsHandleCreated);
+            // Debug.Assert(IsHandleCreated);
+            if (!IsHandleCreated)
+            {
+                throw new Exception("BOOM!");
+            }
 
             // Unicode UTF-16, little endian byte order (BMP of ISO 10646); available only to managed applications
             // https://docs.microsoft.com/windows/win32/intl/code-page-identifiers
